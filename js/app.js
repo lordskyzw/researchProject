@@ -71,6 +71,9 @@
         panels.forEach(function(p) { p.classList.remove('active'); });
         this.classList.add('active');
         document.getElementById(target).classList.add('active');
+        
+        // Scroll to top of panel smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
         // Lazy-load Panel 3 batch inference
         if (target === 'panel3' && !window._panel3Loaded) {
