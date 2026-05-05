@@ -79,6 +79,10 @@
     // Hide results
     document.getElementById('resultsGrid').classList.add('hidden');
     document.getElementById('rasterSection').classList.add('hidden');
+    var vizSection = document.getElementById('networkVizSection');
+    if (vizSection) vizSection.classList.add('hidden');
+    var memSection = document.getElementById('membraneSection');
+    if (memSection) memSection.classList.add('hidden');
   });
 
   // Extract 28×28 pixel array normalised [0,1]

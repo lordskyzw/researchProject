@@ -14,6 +14,7 @@ function snnForward(pixels, weights, T) {
 
   const rasterData = [];
   const spikeHistory = [];  // Per-timestep per-layer spike data for network viz
+  const membraneTrace = []; // Per-timestep membrane potential of output neurons
   let totalOps = 0;
   let totalFired = 0;
 
@@ -72,6 +73,9 @@ function snnForward(pixels, weights, T) {
       output: Array.from(spk3),
     });
 
+    // Record membrane potential AFTER spike/reset for visualization
+    membraneTrace.push(Array.from(mem3));
+
     totalOps += inpSpikes * 256;
     totalOps += fired1 * 128;
     totalOps += fired2 * 10;
@@ -92,6 +96,8 @@ function snnForward(pixels, weights, T) {
     timeMs: elapsed,
     rasterData: rasterData,
     spikeHistory: spikeHistory,
+    membraneTrace: membraneTrace,
+    outSpikeCounts: Array.from(outSpikes),
     timesteps: T,
   };
 }

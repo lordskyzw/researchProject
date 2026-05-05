@@ -75,6 +75,7 @@
       // Show results
       document.getElementById('resultsGrid').classList.remove('hidden');
       document.getElementById('networkVizSection').classList.remove('hidden');
+      document.getElementById('membraneSection').classList.remove('hidden');
       document.getElementById('rasterSection').classList.remove('hidden');
 
       // ANN results
@@ -97,8 +98,33 @@
       document.getElementById('deltaOps').textContent = '▼ ' + opsReduction + '% fewer';
       document.getElementById('deltaEnergy').textContent = '▼ ' + energyReduction + '% less';
 
+      // Confidence distribution bars (digits 0-9)
+      // ANN: use softmax probabilities from output layer activations
+      var annSoftmax = annResult.activations[3];
+      renderConfidenceBars('annConfBars', annSoftmax, '#FF6B35', annResult.prediction);
+
+      // SNN: use cumulative output spike counts
+      var snnSpikeCounts = snnResult.outSpikeCounts;
+      renderConfidenceBars('snnConfBars', snnSpikeCounts, '#00D4FF', snnResult.prediction);
+
       // Spike raster
       renderSpikeRaster('rasterCanvas', snnResult.rasterData, snnResult.timesteps);
+
+      // Membrane potential trace — show winner + 2 runners-up
+      var sortedNeurons = snnResult.outSpikeCounts
+        .map(function(c, i) { return { i: i, c: c }; })
+        .sort(function(a, b) { return b.c - a.c; })
+        .slice(0, 3)
+        .map(function(x) { return x.i; });
+
+      renderMembraneTrace('membraneCanvas', snnResult.membraneTrace, snnResult.spikeHistory, sortedNeurons, 0);
+
+      // Store data for slider syncing
+      window._membraneData = {
+        trace: snnResult.membraneTrace,
+        history: snnResult.spikeHistory,
+        neurons: sortedNeurons,
+      };
 
       // Network visualizations — slider-driven
       setTimeout(function() {
@@ -110,10 +136,19 @@
         annSlider.value = 0;
         annSlider.oninput = function() { renderANNStep(parseInt(this.value)); };
 
-        // SNN timestep slider
+        // SNN timestep slider — also syncs membrane trace
         var snnSlider = document.getElementById('snnTimestepSlider');
         snnSlider.value = 0;
-        snnSlider.oninput = function() { renderSNNStep(parseInt(this.value)); };
+        snnSlider.oninput = function() {
+          var step = parseInt(this.value);
+          renderSNNStep(step);
+          if (window._membraneData) {
+            renderMembraneTrace('membraneCanvas',
+              window._membraneData.trace,
+              window._membraneData.history,
+              window._membraneData.neurons, step);
+          }
+        };
 
         // Play buttons
         document.getElementById('annPlayBtn').onclick = function() { playANNViz(); };

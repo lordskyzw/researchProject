@@ -185,6 +185,15 @@ main {
   color: var(--green); margin-top: 0.2rem;
 }
 
+/* ===== CONFIDENCE BARS ===== */
+.conf-bars-canvas {
+  width: 100%; height: 160px;
+  background: var(--bg2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
 /* ===== SPIKE RASTER ===== */
 .raster-section { margin-top: 2.5rem; text-align: center; }
 .raster-section h2 { font-size: 1rem; font-weight: 500; margin-bottom: 1rem; color: var(--text-muted); }
@@ -194,6 +203,15 @@ main {
   border: 1px solid var(--border);
 }
 .caption { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.75rem; font-style: italic; }
+
+/* ===== MEMBRANE POTENTIAL TRACE ===== */
+.membrane-section { margin-top: 2.5rem; text-align: center; }
+.membrane-section h2 { font-size: 1rem; font-weight: 500; margin-bottom: 1rem; color: var(--text-muted); }
+#membraneCanvas {
+  width: 100%; max-width: 800px; height: 200px;
+  background: var(--bg2); border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
 
 /* ===== NETWORK VISUALIZATION ===== */
 .network-viz-section { margin-top: 2.5rem; }
@@ -347,6 +365,77 @@ footer {
 footer em { color: var(--text); }
 .footer-cite { margin-top: 0.3rem; font-size: 0.7rem; }
 
+/* ===== PANEL 0 — CONCEPT ===== */
+.concept-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; margin-bottom: 2.5rem;
+}
+.concept-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  transition: border-color var(--transition);
+}
+.concept-card:hover { border-color: rgba(255,255,255,0.12); }
+.concept-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+.concept-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.concept-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+.concept-card code {
+  background: rgba(255,255,255,0.06); padding: 0.15rem 0.4rem;
+  border-radius: 4px; font-family: var(--mono); font-size: 0.82rem;
+}
+.concept-tag {
+  margin-top: 1rem; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.ann-tag { color: var(--ann); }
+.snn-tag { color: var(--snn); }
+
+.concept-section {
+  margin-bottom: 2.5rem;
+}
+.concept-section h2 {
+  font-size: 1.15rem; font-weight: 600; margin-bottom: 1.25rem;
+  color: var(--text);
+}
+.concept-body {
+  font-size: 0.95rem; color: var(--text-muted); line-height: 1.8;
+  max-width: 720px;
+}
+.concept-cta { margin-top: 1.5rem; }
+
+.stack-compare {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.stack-col {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.stack-header {
+  font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+.stack-step {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  font-size: 0.85rem; color: var(--text-muted);
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+.stack-step:last-child { border-bottom: none; }
+.step-num {
+  font-family: var(--mono); font-size: 0.7rem;
+  background: rgba(255,255,255,0.05);
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   header { flex-direction: column; height: auto; padding: 0.75rem 1rem; gap: 0.5rem; }
@@ -354,6 +443,7 @@ footer em { color: var(--text); }
   .tab { padding: 0.5rem 0.6rem; font-size: 0.72rem; }
   .tab-label { display: none; }
   .tab::after { content: attr(data-short); font-size: 0.72rem; }
+  .tab[data-panel="panel0"]::after { content: "Concept"; }
   .tab[data-panel="panel1"]::after { content: "Processor"; }
   .tab[data-panel="panel2"]::after { content: "Pipeline"; }
   .tab[data-panel="panel3"]::after { content: "Numbers"; }
@@ -364,6 +454,8 @@ footer em { color: var(--text); }
   .network-viz-grid { grid-template-columns: 1fr; }
   .pipeline-grid { grid-template-columns: 1fr; }
   .charts-grid { grid-template-columns: 1fr; }
+  .concept-grid { grid-template-columns: 1fr; }
+  .stack-compare { grid-template-columns: 1fr; }
   .digit { font-size: 2.5rem; }
   .metric-val { font-size: 0.95rem; }
   .compare-table { font-size: 0.78rem; }
