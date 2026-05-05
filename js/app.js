@@ -26,13 +26,32 @@
       testSamples = ts;
 
       overlay.classList.add('fade-out');
-      setTimeout(function() { overlay.style.display = 'none'; }, 500);
+      setTimeout(function() {
+        overlay.style.display = 'none';
+        // Show intro overlay after loading finishes
+        var intro = document.getElementById('introOverlay');
+        if (intro) {
+          intro.classList.remove('hidden');
+        }
+      }, 500);
     } catch (e) {
       overlay.querySelector('p').textContent =
         'Could not load weights. Run: python training/train_and_export.py';
       overlay.querySelector('.spinner').style.display = 'none';
       console.error(e);
       return;
+    }
+
+    // ---- Intro Overlay Dismiss ----
+    var introSkipBtn = document.getElementById('introSkipBtn');
+    if (introSkipBtn) {
+      introSkipBtn.addEventListener('click', function() {
+        var intro = document.getElementById('introOverlay');
+        intro.classList.add('intro-fadeout');
+        setTimeout(function() {
+          intro.style.display = 'none';
+        }, 400);
+      });
     }
 
     setupTabs();

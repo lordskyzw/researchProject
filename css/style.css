@@ -467,3 +467,269 @@ footer em { color: var(--text); }
   #drawCanvas { width: 240px; height: 240px; }
   .punch-big { font-size: 0.95rem; }
 }
+
+/* ===== INTRO OVERLAY ===== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(5, 5, 10, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  animation: introFadeIn 0.5s ease;
+}
+
+@keyframes introFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.intro-overlay.hidden {
+  display: none;
+}
+
+.intro-overlay.intro-fadeout {
+  animation: introFadeOut 0.4s ease forwards;
+}
+
+@keyframes introFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.intro-card {
+  max-width: 680px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(18, 18, 30, 0.95), rgba(10, 10, 20, 0.98));
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 20px;
+  padding: 2.5rem 2.5rem 2rem;
+  box-shadow:
+    0 0 60px rgba(0, 212, 255, 0.06),
+    0 25px 80px rgba(0, 0, 0, 0.5);
+  animation: introCardSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes introCardSlide {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.intro-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--snn);
+  background: var(--snn-dim);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 1.2rem;
+}
+
+.intro-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.intro-highlight {
+  background: linear-gradient(135deg, var(--snn), #7C3AED);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.intro-subtitle {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.intro-subtitle strong {
+  color: var(--text);
+}
+
+.intro-callout {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem 1.2rem;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.12);
+  border-left: 3px solid var(--snn);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.intro-callout strong {
+  color: var(--text);
+}
+
+.intro-callout-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.intro-energy {
+  color: var(--snn);
+  font-weight: 700;
+  font-family: var(--mono);
+}
+
+/* Technical Details Accordion */
+.intro-details {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.intro-details summary {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.02);
+  transition: background var(--transition);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.intro-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.intro-details summary:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.intro-details-hint {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.intro-details[open] .intro-details-hint {
+  display: none;
+}
+
+.intro-details-content {
+  padding: 0.8rem 1rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+}
+
+.intro-details-content strong {
+  color: var(--text);
+}
+
+.intro-details-content p {
+  margin-bottom: 0.7rem;
+}
+
+.intro-details-content ul {
+  margin: 0.5rem 0 0.8rem 1.2rem;
+  padding: 0;
+}
+
+.intro-details-content li {
+  margin-bottom: 0.35rem;
+}
+
+.intro-details-content li strong {
+  color: var(--snn);
+}
+
+/* CTA Button */
+.intro-actions {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.intro-btn {
+  display: inline-block;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 0.85rem 2.4rem;
+  transition: all 0.3s ease;
+}
+
+.intro-btn-primary {
+  background: linear-gradient(135deg, var(--snn), #7C3AED);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+}
+
+.intro-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(0, 212, 255, 0.35);
+}
+
+.intro-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Credit Line */
+.intro-credit {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.intro-credit strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.intro-credit-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: rgba(136, 136, 160, 0.7);
+}
+
+/* Mobile responsive for intro */
+@media (max-width: 600px) {
+  .intro-card {
+    padding: 1.8rem 1.4rem 1.5rem;
+    border-radius: 16px;
+  }
+  .intro-title {
+    font-size: 1.6rem;
+  }
+  .intro-subtitle {
+    font-size: 0.92rem;
+  }
+  .intro-callout {
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+}

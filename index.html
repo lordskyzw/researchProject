@@ -18,6 +18,64 @@
     </div>
   </div>
 
+  <!-- Intro/Welcome Overlay -->
+  <div id="introOverlay" class="intro-overlay hidden">
+    <div class="intro-card">
+      <div class="intro-badge">⚡ Research Demo</div>
+      <h1 class="intro-title">Neuromorphic Computing<br><span class="intro-highlight">on the Edge</span></h1>
+      <p class="intro-subtitle">
+        This interactive system runs a <strong>real-time digit classification task</strong> through 
+        <strong>two fundamentally different neural architectures</strong> — a Traditional Artificial Neural Network (ANN) 
+        and a brain-inspired Spiking Neural Network (SNN) — side by side.
+      </p>
+      <div class="intro-callout">
+        <div class="intro-callout-icon">🔋</div>
+        <div>
+          <strong>Pay attention to the energy.</strong> The neuromorphic pipeline can achieve up to 
+          <span class="intro-energy">25× lower energy consumption</span> for the same classification task. 
+          For IoT devices running on batteries at the edge — smart sensors, wearables, surveillance cameras — 
+          this isn't a minor optimisation. It's the difference between replacing batteries monthly and devices 
+          that run for <em>years</em>.
+        </div>
+      </div>
+
+      <details class="intro-details">
+        <summary>🔬 Technical Context <span class="intro-details-hint">(click to expand)</span></summary>
+        <div class="intro-details-content">
+          <p>
+            While this demo uses <strong>MNIST handwritten digits</strong> as the classification dataset, 
+            the underlying principle is architecture-agnostic. The same ANN-vs-SNN comparison applies to 
+            any inference task deployed at the edge:
+          </p>
+          <ul>
+            <li><strong>Human detection</strong> in surveillance and security systems</li>
+            <li><strong>Anomaly detection</strong> in industrial IoT sensor networks</li>
+            <li><strong>Gesture recognition</strong> on wearable devices</li>
+            <li><strong>Wildlife monitoring</strong> on remote, solar-powered camera traps</li>
+            <li><strong>Keyword spotting</strong> in always-on voice assistants</li>
+          </ul>
+          <p>
+            The SNN's efficiency comes from its <strong>event-driven, sparse computation</strong> model — 
+            neurons only consume energy when they spike, unlike ANNs where every neuron activates on every inference. 
+            Hardware platforms like Intel's Loihi and IBM's TrueNorth are designed to exploit this sparsity natively, 
+            achieving orders-of-magnitude improvements in energy per inference on real neuromorphic silicon.
+          </p>
+        </div>
+      </details>
+
+      <div class="intro-actions">
+        <button id="introSkipBtn" class="intro-btn intro-btn-primary">
+          Begin Exploring →
+        </button>
+      </div>
+
+      <div class="intro-credit">
+        Research by <strong>Tarimica Sean Chiwara</strong><br>
+        <span class="intro-credit-id">C21145989W · Bachelor of Engineering (Computer Engineering)</span>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="logo"><span class="logo-icon">⚡</span><span>Neuromorphic Edge</span></div>
     <nav class="tabs" id="tabNav">
