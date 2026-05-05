@@ -1,0 +1,25 @@
+# Python / Training
+__pycache__/
+*.pyc
+data/
+training/
+*.pt
+*.pth
+venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Node
+node_modules/
+
+# Docs (not needed at runtime)
+CLAUDE.md
+EBRAINS_NOTE.md
