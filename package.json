@@ -1,0 +1,14 @@
+{
+  "name": "neuromorphic-edge-demo",
+  "version": "1.0.0",
+  "description": "Interactive demo comparing traditional ANN and neuromorphic SNN pipelines",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuromorphic Computing on the Edge</title>
+  <meta name="description" content="Interactive demo comparing traditional ANN and neuromorphic SNN pipelines for edge image classification.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p>Loading neural network weights…</p>
+    </div>
+  </div>
+
+  <header>
+    <div class="logo"><span class="logo-icon">⚡</span><span>Neuromorphic Edge</span></div>
+    <nav class="tabs" id="tabNav">
+      <button class="tab active" data-panel="panel1">
+        <span class="tab-num">01</span><span class="tab-label">The Processor</span>
+      </button>
+      <button class="tab" data-panel="panel2">
+        <span class="tab-num">02</span><span class="tab-label">The Pipeline</span>
+      </button>
+      <button class="tab" data-panel="panel3">
+        <span class="tab-num">03</span><span class="tab-label">The Numbers</span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ PANEL 1 — Draw & Classify ============ -->
+    <section id="panel1" class="panel active">
+      <div class="panel-header">
+        <h1>Draw &amp; Classify</h1>
+        <p class="subtitle">Draw a digit (0–9). Both networks classify it simultaneously.</p>
+      </div>
+
+      <div class="canvas-wrapper">
+        <canvas id="drawCanvas" width="280" height="280"></canvas>
+        <div class="canvas-actions">
+          <button id="clearBtn" class="btn btn-outline">Clear</button>
+          <button id="classifyBtn" class="btn btn-primary">Classify</button>
+        </div>
+      </div>
+
+      <div id="resultsGrid" class="results-grid hidden">
+        <!-- ANN Card -->
+        <div class="result-card">
+          <div class="card-label"><span class="dot dot-ann"></span>TRADITIONAL (ANN)</div>
+          <div class="prediction">
+            <span class="digit" id="annDigit">—</span>
+            <span class="conf" id="annConf"></span>
+          </div>
+          <div class="metric-row">
+            <div class="metric">
+              <span class="metric-val mono" id="annOps">—</span>
+              <span class="metric-lbl">Synaptic Ops</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="annEnergy">—</span>
+              <span class="metric-lbl">Energy</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="annTime">—</span>
+              <span class="metric-lbl">Time</span>
+            </div>
+          </div>
+        </div>
+        <!-- SNN Card -->
+        <div class="result-card snn-glow">
+          <div class="card-label"><span class="dot dot-snn"></span>NEUROMORPHIC (SNN)</div>
+          <div class="prediction">
+            <span class="digit" id="snnDigit">—</span>
+            <span class="conf" id="snnConf"></span>
+          </div>
+          <div class="metric-row">
+            <div class="metric">
+              <span class="metric-val mono" id="snnOps">—</span>
+              <span class="metric-lbl">Synaptic Ops</span>
+              <span class="delta" id="deltaOps"></span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="snnEnergy">—</span>
+              <span class="metric-lbl">Energy</span>
+              <span class="delta" id="deltaEnergy"></span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="snnSparsity">—</span>
+              <span class="metric-lbl">Spike Sparsity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="networkVizSection" class="network-viz-section hidden">
+        <h2>Network Activity — Step Through the Forward Pass</h2>
+        <div class="network-viz-grid">
+          <div class="viz-col">
+            <div class="viz-label"><span class="dot dot-ann"></span>ANN Forward Pass</div>
+            <canvas id="annVizCanvas"></canvas>
+            <div class="viz-controls">
+              <button class="btn-icon" id="annPlayBtn" title="Auto-play">▶</button>
+              <input type="range" id="annLayerSlider" min="0" max="3" step="1" value="0">
+              <span class="viz-step mono" id="annStepLabel">Input (784)</span>
+            </div>
+            <p class="caption">All neurons activate. Every connection fires.</p>
+          </div>
+          <div class="viz-col">
+            <div class="viz-label"><span class="dot dot-snn"></span>SNN Spike Propagation</div>
+            <canvas id="snnVizCanvas"></canvas>
+            <div class="viz-controls">
+              <button class="btn-icon" id="snnPlayBtn" title="Auto-play">▶</button>
+              <input type="range" id="snnTimestepSlider" min="0" max="24" step="1" value="0">
+              <span class="viz-step mono" id="snnStepLabel">Timestep 1 of 25</span>
+            </div>
+            <p class="caption">Only active neurons spike. Sparse by nature.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="rasterSection" class="raster-section hidden">
+        <h2>Spike Activity</h2>
+        <canvas id="rasterCanvas"></canvas>
+        <p class="caption">Each dot is a neuron firing. The white space is energy saved.</p>
+      </div>
+    </section>
+
+    <!-- ============ PANEL 2 — The Pipeline ============ -->
+    <section id="panel2" class="panel">
+      <div class="panel-header">
+        <h1>The Pipeline</h1>
+        <p class="subtitle">Watch your drawn digit move across the frame. Compare frame-based vs event-driven sensing.</p>
+      </div>
+
+      <div class="slider-row">
+        <label for="thresholdSlider">Event Sensitivity Threshold</label>
+        <div class="slider-wrap">
+          <input type="range" id="thresholdSlider" min="0.05" max="0.5" step="0.01" value="0.1">
+          <span class="slider-val mono" id="thresholdVal">0.10</span>
+        </div>
+      </div>
+
+      <div class="pipeline-grid">
+        <!-- Frame Pipeline -->
+        <div class="pipe-col">
+          <div class="pipe-label"><span class="dot dot-ann"></span>FRAME PIPELINE</div>
+          <canvas id="frameCanvas" width="280" height="280"></canvas>
+          <div class="pipe-metrics">
+            <div class="metric">
+              <span class="metric-val mono" id="framePixels">—</span>
+              <span class="metric-lbl">Pixels / frame</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="frameCum">—</span>
+              <span class="metric-lbl">Cumulative</span>
+            </div>
+          </div>
+        </div>
+        <!-- Event Pipeline -->
+        <div class="pipe-col">
+          <div class="pipe-label"><span class="dot dot-snn"></span>EVENT PIPELINE</div>
+          <canvas id="eventCanvas" width="280" height="280"></canvas>
+          <div class="pipe-metrics">
+            <div class="metric">
+              <span class="metric-val mono" id="eventCount">—</span>
+              <span class="metric-lbl">Events / frame</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="eventCum">—</span>
+              <span class="metric-lbl">Cumulative</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-actions">
+        <button id="runPipelineBtn" class="btn btn-primary">▶ Run Pipeline Comparison</button>
+      </div>
+
+      <div id="punchline" class="punchline hidden">
+        <p class="punch-big">
+          Frame pipeline processed <span class="mono ann-text" id="punchFrame">784</span> pixels per frame.<br>
+          Event pipeline processed <span class="mono snn-text" id="punchEvent">~40</span> events per frame.
+        </p>
+        <p class="punch-sub">
+          The neuromorphic pipeline handled <span class="snn-text mono" id="punchReduction">95%</span> less data —<br>
+          at the sensor, in transmission, and at the processor.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ PANEL 3 — The Numbers ============ -->
+    <section id="panel3" class="panel">
+      <div class="panel-header">
+        <h1>The Numbers</h1>
+        <p class="subtitle">Full comparison across 100 MNIST test samples.</p>
+      </div>
+
+      <div id="panel3Loading" class="panel3-loading">
+        <div class="spinner"></div>
+        <p>Running batch inference on 100 samples…</p>
+      </div>
+
+      <div id="panel3Content" class="hidden">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th class="ann-text">Traditional Pipeline</th>
+              <th class="snn-text">Neuromorphic Pipeline</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Sensor data / frame</td><td id="t_sensorAnn">784 pixels</td><td id="t_sensorSnn">—</td></tr>
+            <tr><td>Synaptic operations</td><td id="t_opsAnn">—</td><td id="t_opsSnn">—</td></tr>
+            <tr><td>Energy / inference</td><td id="t_energyAnn">—</td><td id="t_energySnn">—</td></tr>
+            <tr><td>Spike sparsity</td><td>—</td><td id="t_sparsity">—</td></tr>
+            <tr><td>Accuracy (100 samples)</td><td id="t_accAnn">—</td><td id="t_accSnn">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Synaptic Operations</h3>
+            <canvas id="opsChart"></canvas>
+            <p class="chart-insight">SNNs use accumulate-only ops. No multiply. That is the difference.</p>
+          </div>
+          <div class="chart-card">
+            <h3>Energy Estimate</h3>
+            <canvas id="energyChart"></canvas>
+            <p class="chart-insight">Event-driven sensing + spike-based compute = end-to-end efficiency.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Research: <em>"Investigating gains in the applications of Neuromorphic Computing on the edge"</em></p>
+    <p class="footer-cite">Energy proxy: Horowitz 2014 (45nm) — MAC 4.6pJ, AC 0.9pJ</p>
+  </footer>
+
+  <script src="js/ann.js"></script>
+  <script src="js/snn.js"></script>
+  <script src="js/canvas-input.js"></script>
+  <script src="js/event-sim.js"></script>
+  <script src="js/pipeline-anim.js"></script>
+  <script src="js/visualisation.js"></script>
+  <script src="js/network-viz.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
