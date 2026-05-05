@@ -495,11 +495,16 @@ footer em { color: var(--text); }
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
   padding: 2.5rem 1.5rem;
   overflow-y: auto;
   animation: introFadeIn 0.5s ease;
+}
+
+.intro-overlay::before,
+.intro-overlay::after {
+  content: '';
+  margin: auto;
 }
 
 @keyframes introFadeIn {
@@ -527,7 +532,8 @@ footer em { color: var(--text); }
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 20px;
   padding: 2.5rem 2.5rem 2rem;
-  margin: auto;
+  margin: 0 auto;
+  flex-shrink: 0;
   box-shadow:
     0 0 60px rgba(0, 212, 255, 0.06),
     0 25px 80px rgba(0, 0, 0, 0.5);
