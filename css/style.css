@@ -495,16 +495,12 @@ footer em { color: var(--text); }
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   display: flex;
-  flex-direction: column;
-  padding: 2.5rem 1.5rem;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8vh 1.5rem 3rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation: introFadeIn 0.5s ease;
-}
-
-.intro-overlay::before,
-.intro-overlay::after {
-  content: '';
-  margin: auto;
 }
 
 @keyframes introFadeIn {
@@ -532,7 +528,7 @@ footer em { color: var(--text); }
   border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 20px;
   padding: 2.5rem 2.5rem 2rem;
-  margin: 0 auto;
+  margin: 0;
   flex-shrink: 0;
   box-shadow:
     0 0 60px rgba(0, 212, 255, 0.06),
