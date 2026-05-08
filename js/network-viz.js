@@ -1,4 +1,4 @@
-/* ===== Network Visualization — Slider-driven ANN layers & SNN spike propagation ===== */
+/* ===== Network Visualization - Slider-driven ANN layers & SNN spike propagation ===== */
 
 (function() {
   var LAYER_CFG = [
@@ -90,7 +90,7 @@
         ctx.fillRect(x, y, cell - 1, cell - 1);
       }
 
-      // Winner highlight — glow border
+      // Winner highlight - glow border
       if (showLabels && i === winner && values[winner] > 0.01) {
         ctx.save();
         ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',0.9)';
@@ -156,7 +156,7 @@
       var pos = positions[i];
       var isActive = i <= activeIdx;
 
-      // Border — highlight active layer
+      // Border - highlight active layer
       ctx.strokeStyle = isActive
         ? (highlightColor || 'rgba(255,255,255,0.2)')
         : 'rgba(255,255,255,0.04)';
@@ -175,7 +175,7 @@
   }
 
   // ================================================================
-  // ANN — Slider-driven layer-by-layer visualization
+  // ANN - Slider-driven layer-by-layer visualization
   // ================================================================
   var annState = null;
 
@@ -215,12 +215,12 @@
       drawLayerGrid(ctx, s.positions[i], s.activations[i], 255, 107, 53, s.maxVals[i], dimmed);
     }
 
-    // Output layer — draw with digit labels when visible
+    // Output layer - draw with digit labels when visible
     if (step >= 3) {
       drawOutputLayer(ctx, s.positions[3], s.activations[3], 255, 107, 53, s.maxVals[3], 1, true);
     }
 
-    // Inactive layers — faint outline
+    // Inactive layers - faint outline
     for (var i = step + 1; i < 4; i++) {
       var pos = s.positions[i];
       var cfg = pos.cfg;
@@ -265,7 +265,7 @@
   };
 
   // ================================================================
-  // SNN — Slider-driven timestep-by-timestep visualization
+  // SNN - Slider-driven timestep-by-timestep visualization
   // ================================================================
   var snnState = null;
 
@@ -314,12 +314,12 @@
       }
     }
 
-    // Current timestep spikes — bright (hidden layers)
+    // Current timestep spikes - bright (hidden layers)
     for (var i = 0; i < 3; i++) {
       drawLayerGrid(ctx, s.positions[i], layers[i], 0, 212, 255, 1, 1);
     }
 
-    // Output layer — show cumulative spikes with digit labels
+    // Output layer - show cumulative spikes with digit labels
     var maxCum = 1;
     for (var d = 0; d < 10; d++) if (cumOut[d] > maxCum) maxCum = cumOut[d];
     drawOutputLayer(ctx, s.positions[3], cumOut, 0, 212, 255, maxCum, 1, true);
@@ -365,7 +365,7 @@
   };
 
   // ================================================================
-  // Play/Pause buttons — fixed with proper state management
+  // Play/Pause buttons - fixed with proper state management
   // ================================================================
   var annPlayId = null;
   var snnPlayId = null;
@@ -406,7 +406,7 @@
         return;
       }
       slider.value = step;
-      renderANNStep(step);
+      slider.dispatchEvent(new Event('input'));
     }, 700);
   };
 
@@ -444,7 +444,7 @@
         return;
       }
       slider.value = step;
-      renderSNNStep(step);
+      slider.dispatchEvent(new Event('input'));
     }, 150);
   };
 })();

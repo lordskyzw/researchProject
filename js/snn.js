@@ -1,4 +1,4 @@
-/* ===== SNN Inference — Leaky Integrate-and-Fire (784→256→128→10) ===== */
+/* ===== SNN Inference - Leaky Integrate-and-Fire (784→256→128→10) ===== */
 
 function snnForward(pixels, weights, T) {
   T = T || 25;

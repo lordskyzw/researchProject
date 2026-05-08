@@ -1,4 +1,4 @@
-/* ===== Panel 3 — Chart.js Bar Charts ===== */
+/* ===== Panel 3 - Chart.js Bar Charts ===== */
 
 function createComparisonCharts(avgAnnOps, avgSnnOps, avgAnnEnergy, avgSnnEnergy) {
   const commonOptions = {

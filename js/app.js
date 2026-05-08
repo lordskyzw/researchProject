@@ -6,50 +6,39 @@
   let testSamples = null;
   let drawnPixels = null;  // Stored after classify for use in Panel 2
 
-  // ---- Weight Loading ----
-  async function loadJSON(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Failed to load ' + url);
-    return res.json();
+  // ---- Weight Loading (with retry) ----
+  async function loadJSON(url, retries) {
+    if (retries === undefined) retries = 3;
+    for (var attempt = 0; attempt <= retries; attempt++) {
+      try {
+        var res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' for ' + url);
+        return await res.json();
+      } catch (e) {
+        if (attempt === retries) throw e;
+        // Exponential backoff: 1s, 2s, 4s
+        await new Promise(function(r) { setTimeout(r, 1000 * Math.pow(2, attempt)); });
+      }
+    }
   }
 
-  async function init() {
-    const overlay = document.getElementById('loadingOverlay');
-    try {
-      const [aw, sw, ts] = await Promise.all([
-        loadJSON('weights/ann_weights.json'),
-        loadJSON('weights/snn_weights.json'),
-        loadJSON('weights/test_samples.json'),
-      ]);
-      annWeights = aw;
-      snnWeights = sw;
-      testSamples = ts;
+  function init() {
+    // Hide loading overlay immediately - weights load in background
+    var overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.style.display = 'none';
 
-      overlay.classList.add('fade-out');
-      setTimeout(function() {
-        overlay.style.display = 'none';
-        // Show intro overlay after loading finishes
-        var intro = document.getElementById('introOverlay');
-        if (intro) {
-          intro.classList.remove('hidden');
-        }
-      }, 500);
-    } catch (e) {
-      overlay.querySelector('p').textContent =
-        'Could not load weights. Run: python training/train_and_export.py';
-      overlay.querySelector('.spinner').style.display = 'none';
-      console.error(e);
-      return;
-    }
+    // Show intro overlay right away
+    var intro = document.getElementById('introOverlay');
+    if (intro) intro.classList.remove('hidden');
 
     // ---- Intro Overlay Dismiss ----
     var introSkipBtn = document.getElementById('introSkipBtn');
     if (introSkipBtn) {
       introSkipBtn.addEventListener('click', function() {
-        var intro = document.getElementById('introOverlay');
-        intro.classList.add('intro-fadeout');
+        var introEl = document.getElementById('introOverlay');
+        introEl.classList.add('intro-fadeout');
         setTimeout(function() {
-          intro.style.display = 'none';
+          introEl.style.display = 'none';
         }, 400);
       });
     }
@@ -57,6 +46,37 @@
     setupTabs();
     setupClassify();
     setupPipeline();
+
+    // Disable action buttons until weights are ready
+    var classifyBtn = document.getElementById('classifyBtn');
+    var pipelineBtn = document.getElementById('runPipelineBtn');
+    classifyBtn.disabled = true;
+    pipelineBtn.disabled = true;
+    classifyBtn.dataset.originalText = classifyBtn.textContent;
+    pipelineBtn.dataset.originalText = pipelineBtn.textContent;
+    classifyBtn.textContent = 'Loading model...';
+    pipelineBtn.textContent = 'Loading model...';
+
+    // Load weights silently in background
+    Promise.all([
+      loadJSON('weights/ann_weights.json'),
+      loadJSON('weights/snn_weights.json'),
+      loadJSON('weights/test_samples.json'),
+    ]).then(function(results) {
+      annWeights = results[0];
+      snnWeights = results[1];
+      testSamples = results[2];
+
+      // Enable action buttons
+      classifyBtn.disabled = false;
+      pipelineBtn.disabled = false;
+      classifyBtn.textContent = classifyBtn.dataset.originalText;
+      pipelineBtn.textContent = pipelineBtn.dataset.originalText;
+    }).catch(function(e) {
+      console.error('Weight loading failed:', e);
+      classifyBtn.textContent = 'Weights failed to load';
+      pipelineBtn.textContent = 'Weights failed to load';
+    });
   }
 
   // ---- Tab Navigation ----
@@ -132,7 +152,7 @@
       // Spike raster
       renderSpikeRaster('rasterCanvas', snnResult.rasterData, snnResult.timesteps);
 
-      // Membrane potential trace — show winner + 2 runners-up
+      // Membrane potential trace - show winner + 2 runners-up
       var sortedNeurons = snnResult.outSpikeCounts
         .map(function(c, i) { return { i: i, c: c }; })
         .sort(function(a, b) { return b.c - a.c; })
@@ -148,7 +168,7 @@
         neurons: sortedNeurons,
       };
 
-      // Network visualizations — slider-driven
+      // Network visualizations - slider-driven
       setTimeout(function() {
         initANNViz('annVizCanvas', annResult.activations);
         initSNNViz('snnVizCanvas', snnResult.spikeHistory, snnResult.timesteps);
@@ -158,7 +178,7 @@
         annSlider.value = 0;
         annSlider.oninput = function() { renderANNStep(parseInt(this.value)); };
 
-        // SNN timestep slider — also syncs membrane trace
+        // SNN timestep slider - also syncs membrane trace
         var snnSlider = document.getElementById('snnTimestepSlider');
         snnSlider.value = 0;
         snnSlider.oninput = function() {
@@ -175,7 +195,19 @@
         // Play buttons
         document.getElementById('annPlayBtn').onclick = function() { playANNViz(); };
         document.getElementById('snnPlayBtn').onclick = function() { playSNNViz(); };
+        
+        // Auto-start visualizations after brief delay
+        setTimeout(function() {
+          var annBtn = document.getElementById('annPlayBtn');
+          if (annBtn && annBtn.textContent === '▶' && window.playANNViz) playANNViz();
+          
+          var snnBtn = document.getElementById('snnPlayBtn');
+          if (snnBtn && snnBtn.textContent === '▶' && window.playSNNViz) playSNNViz();
+        }, 300);
       }, 100);
+      
+      // Reset pipeline animation state
+      if (window.resetPipelineAnimation) window.resetPipelineAnimation();
     });
   }
 

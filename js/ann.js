@@ -36,7 +36,7 @@ function argmax(x) {
   return best;
 }
 
-// ANN forward pass — returns layer activations for network visualization
+// ANN forward pass - returns layer activations for network visualization
 function annForward(pixels, weights) {
   const t0 = performance.now();
 

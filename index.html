@@ -25,6 +25,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Preload weight files for faster access -->
+  <link rel="preload" href="weights/ann_weights.json" as="fetch" crossorigin>
+  <link rel="preload" href="weights/snn_weights.json" as="fetch" crossorigin>
+  <link rel="preload" href="weights/test_samples.json" as="fetch" crossorigin>
 </head>
 <body>
   <!-- Loading Overlay -->
@@ -42,15 +47,15 @@
       <h1 class="intro-title">Neuromorphic Computing<br><span class="intro-highlight">on the Edge</span></h1>
       <p class="intro-subtitle">
         This interactive system runs a <strong>real-time digit classification task</strong> through 
-        <strong>two fundamentally different neural architectures</strong> — a Traditional Artificial Neural Network (ANN) 
-        and a brain-inspired Spiking Neural Network (SNN) — side by side.
+        <strong>two fundamentally different neural architectures</strong> - a Traditional Artificial Neural Network (ANN) 
+        and a brain-inspired Spiking Neural Network (SNN) - side by side.
       </p>
       <div class="intro-callout">
         <div class="intro-callout-icon">🔋</div>
         <div>
           <strong>Pay attention to the energy.</strong> The neuromorphic pipeline can achieve up to 
           <span class="intro-energy">25× lower energy consumption</span> for the same classification task. 
-          For IoT devices running on batteries at the edge — smart sensors, wearables, surveillance cameras — 
+          For IoT devices running on batteries at the edge - smart sensors, wearables, surveillance cameras - 
           this isn't a minor optimisation. It's the difference between replacing batteries monthly and devices 
           that run for <em>years</em>.
         </div>
@@ -72,7 +77,7 @@
             <li><strong>Keyword spotting</strong> in always-on voice assistants</li>
           </ul>
           <p>
-            The SNN's efficiency comes from its <strong>event-driven, sparse computation</strong> model — 
+            The SNN's efficiency comes from its <strong>event-driven, sparse computation</strong> model - 
             neurons only consume energy when they spike, unlike ANNs where every neuron activates on every inference. 
             Hardware platforms like Intel's Loihi and IBM's TrueNorth are designed to exploit this sparsity natively, 
             achieving orders-of-magnitude improvements in energy per inference on real neuromorphic silicon.
@@ -112,24 +117,24 @@
   </header>
 
   <main>
-    <!-- ============ PANEL 0 — The Concept ============ -->
+    <!-- ============ PANEL 0 - The Concept ============ -->
     <section id="panel0" class="panel">
       <div class="panel-header">
         <h1>The Concept</h1>
-        <p class="subtitle">Why neuromorphic computing is fundamentally different — and why it matters at the edge.</p>
+        <p class="subtitle">Why neuromorphic computing is fundamentally different - and why it matters at the edge.</p>
       </div>
 
       <div class="concept-grid">
         <div class="concept-card">
           <div class="concept-icon">🧠</div>
           <h3>Traditional Neuron</h3>
-          <p>An ANN neuron computes <code>y = f(Wx + b)</code> — it multiplies <em>every</em> input by a weight, sums them, and outputs a continuous value. <strong>Every neuron fires, every time.</strong></p>
+          <p>An ANN neuron computes <code>y = f(Wx + b)</code> - it multiplies <em>every</em> input by a weight, sums them, and outputs a continuous value. <strong>Every neuron fires, every time.</strong></p>
           <div class="concept-tag ann-tag">Dense · Continuous · Always-on</div>
         </div>
         <div class="concept-card">
           <div class="concept-icon">⚡</div>
           <h3>Spiking Neuron</h3>
-          <p>An SNN neuron accumulates input voltage over time. It only fires a <em>spike</em> when voltage crosses a threshold — then resets. <strong>Most neurons stay silent.</strong></p>
+          <p>An SNN neuron accumulates input voltage over time. It only fires a <em>spike</em> when voltage crosses a threshold - then resets. <strong>Most neurons stay silent.</strong></p>
           <div class="concept-tag snn-tag">Sparse · Event-driven · Efficient</div>
         </div>
       </div>
@@ -141,14 +146,14 @@
             <div class="stack-header ann-text">Traditional Pipeline</div>
             <div class="stack-step"><span class="step-num">1</span> Frame camera captures <strong>all 784 pixels</strong> every frame</div>
             <div class="stack-step"><span class="step-num">2</span> All pixels transmitted to processor</div>
-            <div class="stack-step"><span class="step-num">3</span> Dense matrix multiply — <strong>every weight used</strong></div>
+            <div class="stack-step"><span class="step-num">3</span> Dense matrix multiply - <strong>every weight used</strong></div>
             <div class="stack-step"><span class="step-num">4</span> MAC operations: <strong>4.6 pJ each</strong></div>
           </div>
           <div class="stack-col">
             <div class="stack-header snn-text">Neuromorphic Pipeline</div>
             <div class="stack-step"><span class="step-num">1</span> Event camera sends only <strong>~40 changed pixels</strong></div>
-            <div class="stack-step"><span class="step-num">2</span> Only events transmitted — <strong>95% less data</strong></div>
-            <div class="stack-step"><span class="step-num">3</span> Sparse accumulate — <strong>only active synapses</strong></div>
+            <div class="stack-step"><span class="step-num">2</span> Only events transmitted - <strong>95% less data</strong></div>
+            <div class="stack-step"><span class="step-num">3</span> Sparse accumulate - <strong>only active synapses</strong></div>
             <div class="stack-step"><span class="step-num">4</span> AC operations: <strong>0.9 pJ each</strong></div>
           </div>
         </div>
@@ -156,14 +161,14 @@
 
       <div class="concept-section">
         <h2>Why It Matters at the Edge</h2>
-        <p class="concept-body">Edge devices — drones, wearables, IoT sensors — run on batteries. A neuromorphic chip doing the same classification as an ANN uses <strong>~5× fewer operations</strong> and <strong>~5× less energy per operation</strong>. That is a 25× compound advantage. This demo lets you see exactly where that savings comes from.</p>
+        <p class="concept-body">Edge devices - drones, wearables, IoT sensors - run on batteries. A neuromorphic chip doing the same classification as an ANN uses <strong>~5× fewer operations</strong> and <strong>~5× less energy per operation</strong>. That is a 25× compound advantage. This demo lets you see exactly where that savings comes from.</p>
         <div class="concept-cta">
           <button class="btn btn-primary" onclick="document.querySelector('[data-panel=panel1]').click()">→ Try it yourself</button>
         </div>
       </div>
     </section>
 
-    <!-- ============ PANEL 1 — Draw & Classify ============ -->
+    <!-- ============ PANEL 1 - Draw & Classify ============ -->
     <section id="panel1" class="panel active">
       <div class="panel-header">
         <h1>Draw &amp; Classify</h1>
@@ -178,59 +183,8 @@
         </div>
       </div>
 
-      <div id="resultsGrid" class="results-grid hidden">
-        <!-- ANN Card -->
-        <div class="result-card">
-          <div class="card-label"><span class="dot dot-ann"></span>TRADITIONAL (ANN)</div>
-          <div class="prediction">
-            <span class="digit" id="annDigit">—</span>
-            <span class="conf" id="annConf"></span>
-          </div>
-          <canvas id="annConfBars" class="conf-bars-canvas"></canvas>
-          <div class="metric-row">
-            <div class="metric">
-              <span class="metric-val mono" id="annOps">—</span>
-              <span class="metric-lbl">Synaptic Ops</span>
-            </div>
-            <div class="metric">
-              <span class="metric-val mono" id="annEnergy">—</span>
-              <span class="metric-lbl">Energy</span>
-            </div>
-            <div class="metric">
-              <span class="metric-val mono" id="annTime">—</span>
-              <span class="metric-lbl">Time</span>
-            </div>
-          </div>
-        </div>
-        <!-- SNN Card -->
-        <div class="result-card snn-glow">
-          <div class="card-label"><span class="dot dot-snn"></span>NEUROMORPHIC (SNN)</div>
-          <div class="prediction">
-            <span class="digit" id="snnDigit">—</span>
-            <span class="conf" id="snnConf"></span>
-          </div>
-          <canvas id="snnConfBars" class="conf-bars-canvas"></canvas>
-          <div class="metric-row">
-            <div class="metric">
-              <span class="metric-val mono" id="snnOps">—</span>
-              <span class="metric-lbl">Synaptic Ops</span>
-              <span class="delta" id="deltaOps"></span>
-            </div>
-            <div class="metric">
-              <span class="metric-val mono" id="snnEnergy">—</span>
-              <span class="metric-lbl">Energy</span>
-              <span class="delta" id="deltaEnergy"></span>
-            </div>
-            <div class="metric">
-              <span class="metric-val mono" id="snnSparsity">—</span>
-              <span class="metric-lbl">Spike Sparsity</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="networkVizSection" class="network-viz-section hidden">
-        <h2>Network Activity — Step Through the Forward Pass</h2>
+      <div id="networkVizSection" class="network-viz-section hidden" style="margin-bottom: 2rem;">
+        <h2>Network Activity - Here's what just happened across the 2 networks</h2>
         <div class="network-viz-grid">
           <div class="viz-col">
             <div class="viz-label"><span class="dot dot-ann"></span>ANN Forward Pass</div>
@@ -255,10 +209,62 @@
         </div>
       </div>
 
+      <div id="resultsGrid" class="results-grid hidden">
+        <!-- ANN Card -->
+        <div class="result-card">
+          <div class="card-label"><span class="dot dot-ann"></span>TRADITIONAL (ANN)</div>
+          <div class="prediction">
+            <span class="digit" id="annDigit">-</span>
+            <span class="conf" id="annConf"></span>
+          </div>
+          <canvas id="annConfBars" class="conf-bars-canvas"></canvas>
+          <div class="metric-row">
+            <div class="metric">
+              <span class="metric-val mono" id="annOps">-</span>
+              <span class="metric-lbl">Synaptic Ops</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="annEnergy">-</span>
+              <span class="metric-lbl">Energy</span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="annTime">-</span>
+              <span class="metric-lbl">Time</span>
+            </div>
+          </div>
+        </div>
+        <!-- SNN Card -->
+        <div class="result-card snn-glow">
+          <div class="card-label"><span class="dot dot-snn"></span>NEUROMORPHIC (SNN)</div>
+          <div class="prediction">
+            <span class="digit" id="snnDigit">-</span>
+            <span class="conf" id="snnConf"></span>
+          </div>
+          <canvas id="snnConfBars" class="conf-bars-canvas"></canvas>
+          <div class="metric-row">
+            <div class="metric">
+              <span class="metric-val mono" id="snnOps">-</span>
+              <span class="metric-lbl">Synaptic Ops</span>
+              <span class="delta" id="deltaOps"></span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="snnEnergy">-</span>
+              <span class="metric-lbl">Energy</span>
+              <span class="delta" id="deltaEnergy"></span>
+            </div>
+            <div class="metric">
+              <span class="metric-val mono" id="snnSparsity">-</span>
+              <span class="metric-lbl">Spike Sparsity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <div id="membraneSection" class="membrane-section hidden">
-        <h2>Membrane Potential — How Spiking Neurons Decide</h2>
+        <h2>Membrane Potential - How Spiking Neurons Decide</h2>
         <canvas id="membraneCanvas"></canvas>
-        <p class="caption">Voltage builds up over time. When it crosses the red threshold — a spike fires and the voltage resets. That is how biology computes.</p>
+        <p class="caption">Voltage builds up over time. When it crosses the red threshold - a spike fires and the voltage resets. That is how biology computes.</p>
       </div>
 
       <div id="rasterSection" class="raster-section hidden">
@@ -268,7 +274,7 @@
       </div>
     </section>
 
-    <!-- ============ PANEL 2 — The Pipeline ============ -->
+    <!-- ============ PANEL 2 - The Pipeline ============ -->
     <section id="panel2" class="panel">
       <div class="panel-header">
         <h1>The Pipeline</h1>
@@ -290,11 +296,11 @@
           <canvas id="frameCanvas" width="280" height="280"></canvas>
           <div class="pipe-metrics">
             <div class="metric">
-              <span class="metric-val mono" id="framePixels">—</span>
+              <span class="metric-val mono" id="framePixels">-</span>
               <span class="metric-lbl">Pixels / frame</span>
             </div>
             <div class="metric">
-              <span class="metric-val mono" id="frameCum">—</span>
+              <span class="metric-val mono" id="frameCum">-</span>
               <span class="metric-lbl">Cumulative</span>
             </div>
           </div>
@@ -305,11 +311,11 @@
           <canvas id="eventCanvas" width="280" height="280"></canvas>
           <div class="pipe-metrics">
             <div class="metric">
-              <span class="metric-val mono" id="eventCount">—</span>
+              <span class="metric-val mono" id="eventCount">-</span>
               <span class="metric-lbl">Events / frame</span>
             </div>
             <div class="metric">
-              <span class="metric-val mono" id="eventCum">—</span>
+              <span class="metric-val mono" id="eventCum">-</span>
               <span class="metric-lbl">Cumulative</span>
             </div>
           </div>
@@ -326,13 +332,13 @@
           Event pipeline processed <span class="mono snn-text" id="punchEvent">~40</span> events per frame.
         </p>
         <p class="punch-sub">
-          The neuromorphic pipeline handled <span class="snn-text mono" id="punchReduction">95%</span> less data —<br>
+          The neuromorphic pipeline handled <span class="snn-text mono" id="punchReduction">95%</span> less data -<br>
           at the sensor, in transmission, and at the processor.
         </p>
       </div>
     </section>
 
-    <!-- ============ PANEL 3 — The Numbers ============ -->
+    <!-- ============ PANEL 3 - The Numbers ============ -->
     <section id="panel3" class="panel">
       <div class="panel-header">
         <h1>The Numbers</h1>
@@ -354,11 +360,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td>Sensor data / frame</td><td id="t_sensorAnn">784 pixels</td><td id="t_sensorSnn">—</td></tr>
-            <tr><td>Synaptic operations</td><td id="t_opsAnn">—</td><td id="t_opsSnn">—</td></tr>
-            <tr><td>Energy / inference</td><td id="t_energyAnn">—</td><td id="t_energySnn">—</td></tr>
-            <tr><td>Spike sparsity</td><td>—</td><td id="t_sparsity">—</td></tr>
-            <tr><td>Accuracy (100 samples)</td><td id="t_accAnn">—</td><td id="t_accSnn">—</td></tr>
+            <tr><td>Sensor data / frame</td><td id="t_sensorAnn">784 pixels</td><td id="t_sensorSnn">-</td></tr>
+            <tr><td>Synaptic operations</td><td id="t_opsAnn">-</td><td id="t_opsSnn">-</td></tr>
+            <tr><td>Energy / inference</td><td id="t_energyAnn">-</td><td id="t_energySnn">-</td></tr>
+            <tr><td>Spike sparsity</td><td>-</td><td id="t_sparsity">-</td></tr>
+            <tr><td>Accuracy (100 samples)</td><td id="t_accAnn">-</td><td id="t_accSnn">-</td></tr>
           </tbody>
         </table>
 
@@ -380,7 +386,7 @@
 
   <footer>
     <p>Research: <em>"Investigating gains in the applications of Neuromorphic Computing on the edge"</em></p>
-    <p class="footer-cite">Energy proxy: Horowitz 2014 (45nm) — MAC 4.6pJ, AC 0.9pJ</p>
+    <p class="footer-cite">Energy proxy: Horowitz 2014 (45nm) - MAC 4.6pJ, AC 0.9pJ</p>
   </footer>
 
   <script src="js/ann.js"></script>

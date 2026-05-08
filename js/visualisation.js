@@ -176,7 +176,7 @@ function renderConfidenceBars(canvasId, values, color, prediction, label) {
 }
 
 /**
- * Membrane potential trace — shows LIF voltage for output neurons over timesteps.
+ * Membrane potential trace - shows LIF voltage for output neurons over timesteps.
  * membraneTrace: array of T arrays of 10 values
  * spikeHistory: array of T objects with .output (10 values)
  * highlightNeurons: array of neuron indices to plot
@@ -298,7 +298,7 @@ function renderMembraneTrace(canvasId, membraneTrace, spikeHistory, highlightNeu
   ctx.fillStyle = '#00D4FF';
   ctx.font = 'bold 10px Inter, sans-serif';
   ctx.textAlign = 'left';
-  ctx.fillText('Membrane Potential — Output Neurons', pad.left, pad.top - 6);
+  ctx.fillText('Membrane Potential - Output Neurons', pad.left, pad.top - 6);
 
   // Legend
   ctx.font = '9px JetBrains Mono, monospace';

@@ -1,4 +1,4 @@
-/* ===== Panel 2 — Pipeline Animation ===== */
+/* ===== Panel 2 - Pipeline Animation ===== */
 
 (function() {
   let animating = false;
@@ -10,12 +10,26 @@
       alert('Draw a digit in Panel 1 first, then come back here.');
       return;
     }
-    animating = true;
-
     const btn = document.getElementById('runPipelineBtn');
-    btn.disabled = true;
-    btn.textContent = '⏳ Running…';
-    document.getElementById('punchline').classList.add('hidden');
+    
+    if (animating) {
+      // Stop
+      cancelAnimationFrame(animFrameId);
+      animating = false;
+      btn.textContent = '▶ Run Pipeline Comparison';
+      // Reset state for next run
+      window._pipeState = { frameIdx: 0, cumPixels: 0, cumEvents: 0 };
+      return;
+    }
+
+    // Play
+    animating = true;
+    btn.textContent = '⏹ Stop Pipeline';
+    
+    // Only hide punchline if we haven't shown it yet
+    if (window._pipeState && window._pipeState.frameIdx === 0) {
+      document.getElementById('punchline').classList.add('hidden');
+    }
 
     const threshold = parseFloat(document.getElementById('thresholdSlider').value);
     const frames = generateTranslationSequence(drawnPixels, 30);
@@ -29,9 +43,15 @@
     frameCanvas.width = 280; frameCanvas.height = 280;
     eventCanvas.width = 280; eventCanvas.height = 280;
 
-    let frameIdx = 0;
-    let cumPixels = 0;
-    let cumEvents = 0;
+    // Global so we can resume/stop
+    window._pipeState = window._pipeState || { frameIdx: 0, cumPixels: 0, cumEvents: 0 };
+    if (!animating) { // starting fresh after classify
+       window._pipeState = { frameIdx: 0, cumPixels: 0, cumEvents: 0 };
+    }
+    
+    let frameIdx = window._pipeState.frameIdx;
+    let cumPixels = window._pipeState.cumPixels;
+    let cumEvents = window._pipeState.cumEvents;
     const FRAME_INTERVAL = 100; // ms per frame
     let lastTime = 0;
 
@@ -78,9 +98,10 @@
       lastTime = timestamp;
 
       if (frameIdx >= frames.length) {
-        // Animation complete — show punchline
-        finishAnimation(cumPixels, cumEvents, frames.length);
-        return;
+        // Animation complete - show punchline and loop
+        updatePunchline(cumPixels, cumEvents, frames.length);
+        frameIdx = 0; // Loop back
+        // Don't return, keep running
       }
 
       // Get current threshold (may have changed via slider)
@@ -108,18 +129,17 @@
 
       frameIdx++;
       animFrameId = requestAnimationFrame(step);
+      window._pipeState.frameIdx = frameIdx;
+      window._pipeState.cumPixels = cumPixels;
+      window._pipeState.cumEvents = cumEvents;
     }
 
     animFrameId = requestAnimationFrame(step);
   };
 
-  function finishAnimation(cumPixels, cumEvents, numFrames) {
-    animating = false;
-    const btn = document.getElementById('runPipelineBtn');
-    btn.disabled = false;
-    btn.textContent = '▶ Run Pipeline Comparison';
-
-    const avgEvents = Math.round(cumEvents / Math.max(1, numFrames - 1));
+  function updatePunchline(cumPixels, cumEvents, numFrames) {
+    // Only show average if we have looped at least once
+    const avgEvents = Math.round(cumEvents / Math.max(1, window._pipeState.cumPixels / 784));
     const reduction = ((1 - avgEvents / 784) * 100).toFixed(0);
 
     document.getElementById('punchFrame').textContent = '784';
@@ -127,6 +147,17 @@
     document.getElementById('punchReduction').textContent = reduction + '%';
     document.getElementById('punchline').classList.remove('hidden');
   }
+
+  // Hook to reset pipeline state when classifying a new digit
+  window.resetPipelineAnimation = function() {
+    animating = false;
+    cancelAnimationFrame(animFrameId);
+    window._pipeState = { frameIdx: 0, cumPixels: 0, cumEvents: 0 };
+    const btn = document.getElementById('runPipelineBtn');
+    if (btn) btn.textContent = '▶ Run Pipeline Comparison';
+    const punch = document.getElementById('punchline');
+    if (punch) punch.classList.add('hidden');
+  };
 
   // Threshold slider live readout
   const slider = document.getElementById('thresholdSlider');
